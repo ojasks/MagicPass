@@ -36,19 +36,41 @@
 import Admin from "./Admin";
 import Visitor from "./Visitor";
 
+
+// function App() {
+//   const path = window.location.pathname;
+
+//   if (path === "/admin") return <Admin />;
+//   if (path === "/visitor") return <Visitor />;
+
+//   return (
+//     <div style={{ padding: 20 }}>
+//       <h1>MagicPass</h1>
+//       <a href="/admin">Admin (Mint)</a> <br /><br />
+//       <a href="/visitor">Visitor (View Pass)</a>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+import Scanner from "./Scanner";
+
 function App() {
   const path = window.location.pathname;
 
   if (path === "/admin") return <Admin />;
   if (path === "/visitor") return <Visitor />;
+  if (path === "/scan") return <Scanner />;
 
   return (
     <div style={{ padding: 20 }}>
       <h1>MagicPass</h1>
+
       <a href="/admin">Admin (Mint)</a> <br /><br />
-      <a href="/visitor">Visitor (View Pass)</a>
+      <a href="/visitor">Visitor (View Pass)</a> <br /><br />
+      <a href="/scan">Scanner</a>
     </div>
   );
 }
-
 export default App;
