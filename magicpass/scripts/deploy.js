@@ -5,7 +5,6 @@
 
 //   console.log("MagicPass deployed at:", contract.address);
 // }
-
 // main().catch((error) => {
 //   console.error(error);
 //   process.exit(1);
