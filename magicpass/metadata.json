@@ -1,0 +1,9 @@
+{
+  "name": "MagicPass",
+  "description": "Blockchain Visitor Entry Pass",
+  "image": "ipfs://bafkreicem2ryzh3elyayupbco6s6d6nhhk72hau2a5ug2z75iwkngu5xne",
+  "attributes": [
+    { "trait_type": "Visitor", "value": "Guest" },
+    { "trait_type": "Date", "value": "2025-01-01" }
+  ]
+}
