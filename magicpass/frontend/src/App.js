@@ -25,10 +25,30 @@
 // export default App;
 
 
+// import Admin from "./Admin";
+
+// function App() {
+//   return <Admin />;
+// }
+
+// export default App;
+
 import Admin from "./Admin";
+import Visitor from "./Visitor";
 
 function App() {
-  return <Admin />;
+  const path = window.location.pathname;
+
+  if (path === "/admin") return <Admin />;
+  if (path === "/visitor") return <Visitor />;
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h1>MagicPass</h1>
+      <a href="/admin">Admin (Mint)</a> <br /><br />
+      <a href="/visitor">Visitor (View Pass)</a>
+    </div>
+  );
 }
 
 export default App;
