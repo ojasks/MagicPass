@@ -6,7 +6,6 @@ import { getContract } from "./contract";
 export default function Scanner() {
   const [result, setResult] = useState("");
   const [status, setStatus] = useState("");
-
   async function verify(decoded) {
     try {
       setStatus("Checking on-chain…");

@@ -53,7 +53,6 @@ import Visitor from "./Visitor";
 // }
 
 // export default App;
-
 import Scanner from "./Scanner";
 
 function App() {
