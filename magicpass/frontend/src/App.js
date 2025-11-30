@@ -53,6 +53,33 @@ import Visitor from "./Visitor";
 // }
 
 // export default App;
+
+
+// import Scanner from "./Scanner";
+
+// function App() {
+//   const path = window.location.pathname;
+
+//   if (path === "/admin") return <Admin />;
+//   if (path === "/visitor") return <Visitor />;
+//   if (path === "/scan") return <Scanner />;
+
+//   return (
+//     <div style={{ padding: 20 }}>
+//       <h1>MagicPass</h1>
+
+//       <a href="/admin">Admin (Mint)</a> <br /><br />
+//       <a href="/visitor">Visitor (View Pass)</a> <br /><br />
+//       <a href="/scan">Scanner</a>
+//     </div>
+//   );
+// }
+// export default App;
+
+
+
+// import Admin from "./Admin";
+// import Visitor from "./Visitor";
 import Scanner from "./Scanner";
 
 function App() {
@@ -60,16 +87,16 @@ function App() {
 
   if (path === "/admin") return <Admin />;
   if (path === "/visitor") return <Visitor />;
-  if (path === "/scan") return <Scanner />;
+  if (path === "/scanner") return <Scanner />;
 
   return (
     <div style={{ padding: 20 }}>
       <h1>MagicPass</h1>
-
-      <a href="/admin">Admin (Mint)</a> <br /><br />
-      <a href="/visitor">Visitor (View Pass)</a> <br /><br />
-      <a href="/scan">Scanner</a>
+      <a href="/admin">Admin</a><br/>
+      <a href="/visitor">Visitor</a><br/>
+      <a href="/scanner">Scanner</a>
     </div>
   );
 }
+
 export default App;
