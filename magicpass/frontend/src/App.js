@@ -33,8 +33,8 @@
 
 // export default App;
 
-import Admin from "./Admin";
-import Visitor from "./Visitor";
+// import Admin from "./Admin";
+// import Visitor from "./Visitor";
 
 
 // function App() {
@@ -78,25 +78,81 @@ import Visitor from "./Visitor";
 
 
 
-// import Admin from "./Admin";
-// import Visitor from "./Visitor";
+//  import Admin from "../Admin";
+//  import Visitor from "../Visitor";
+// import Scanner from "../Scanner";
+
+// function App() {
+//   const path = window.location.pathname;
+
+//   if (path === "/admin") return <Admin />;
+//   if (path === "/visitor") return <Visitor />;
+//   if (path === "/scanner") return <Scanner />;
+
+//   return (
+//     <div style={{ padding: 20 }}>
+//       <h1>MagicPass</h1>
+//       <a href="/admin">Admin</a><br/>
+//       <a href="/visitor">Visitor</a><br/>
+//       <a href="/scanner">Scanner</a>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
+import Header from "./components/header";
+import Hero from "./components/hero";
+import Features from "./components/features";
+import CTA from "./components/cta";
+import Footer from "./components/footer";
+
+import Admin from "./Admin";
+import Visitor from "./Visitor";
 import Scanner from "./Scanner";
 
 function App() {
   const path = window.location.pathname;
 
+  // Simple SPA routing
   if (path === "/admin") return <Admin />;
   if (path === "/visitor") return <Visitor />;
   if (path === "/scanner") return <Scanner />;
 
+  // Landing page
   return (
-    <div style={{ padding: 20 }}>
-      <h1>MagicPass</h1>
-      <a href="/admin">Admin</a><br/>
-      <a href="/visitor">Visitor</a><br/>
-      <a href="/scanner">Scanner</a>
-    </div>
+    <main className="min-h-screen bg-background">
+      <Header />
+      <Hero />
+      <Features />
+      <CTA />
+      <Footer />
+    </main>
   );
 }
 
 export default App;
+
+// -> this was manual routing
+
+
+
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Admin from "./Admin";
+// import Visitor from "./Visitor";
+// import Scanner from "./Scanner";
+// // import Landing from "./Landing";
+
+// export default function App() {
+//   return (
+//     <BrowserRouter>
+//       <Routes>
+//         <Route path="/" element={<Landing />} />
+//         <Route path="/admin" element={<Admin />} />
+//         <Route path="/visitor" element={<Visitor />} />
+//         <Route path="/scanner" element={<Scanner />} />
+//       </Routes>
+//     </BrowserRouter>
+//   );
+// }

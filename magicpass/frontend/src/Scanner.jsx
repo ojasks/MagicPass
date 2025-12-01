@@ -54,100 +54,161 @@
 
 
 
-import React, { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import { getContract } from "./contract";
-import { QrReader } from "react-qr-reader";
+// import React, { useState, useEffect } from "react";
+// import { ethers } from "ethers";
+// import { getContract } from "./contract";
+// import { QrReader } from "react-qr-reader";
 
-export default function Scanner() {
+// export default function Scanner() {
+//   const [result, setResult] = useState("");
+//   const [status, setStatus] = useState("");
+//   const [events, setEvents] = useState([]);
+
+//   useEffect(() => {
+//     async function loadEvents() {
+//       const provider = new ethers.BrowserProvider(window.ethereum);
+//       const contract = getContract(provider);
+
+//       const filter = contract.filters.PassScanned();
+//       const logs = await contract.queryFilter(filter);
+
+//       const parsed = logs
+//         .map((log) => {
+//           return {
+//             user: log.args.user,
+//             tokenId: Number(log.args.tokenId),
+//             time: new Date(Number(log.args.time) * 1000).toLocaleString(),
+//           };
+//         })
+//         .reverse();
+
+//       setEvents(parsed);
+//     }
+
+//     loadEvents();
+//   }, []);
+
+//   async function handleScan(data) {
+//     if (!data) return;
+//     if (data === result) return;
+
+//     setResult(data);
+
+//     // QR format is: address:tokenId
+//     const [user, tokenId] = data.split(":");
+//     setStatus(`Scanned pass of user ${user}, token ${tokenId}`);
+
+//     try {
+//       await window.ethereum.request({ method: "eth_requestAccounts" });
+//       const provider = new ethers.BrowserProvider(window.ethereum);
+//       const signer = await provider.getSigner();
+//       const contract = getContract(signer);
+
+//       const tx = await contract.logScan(user, Number(tokenId));
+//       await tx.wait();
+
+//       setStatus("✔ Pass Verified & Logged Successfully");
+
+//       // reload events after log
+//       const filter = contract.filters.PassScanned();
+//       const logs = await contract.queryFilter(filter);
+
+//       const parsed = logs
+//         .map((log) => ({
+//           user: log.args.user,
+//           tokenId: Number(log.args.tokenId),
+//           time: new Date(Number(log.args.time) * 1000).toLocaleString(),
+//         }))
+//         .reverse();
+
+//       setEvents(parsed);
+//     } catch (e) {
+//       setStatus("❌ Invalid Pass: " + e.reason);
+//     }
+//   }
+
+//   return (
+//     <div style={{ padding: 20 }}>
+//       <h2>Scanner</h2>
+
+//       <QrReader
+//         onResult={(r) => handleScan(r?.text)}
+//         constraints={{ facingMode: "environment" }}
+//         style={{ width: "300px" }}
+//       />
+
+//       <p>{status}</p>
+
+//       <h3>Scan History</h3>
+
+//       {events.map((e, i) => (
+//         <div key={i} style={{ border: "1px solid #444", padding: 10, marginBottom: 10 }}>
+//           <p>User: {e.user}</p>
+//           <p>Token: {e.tokenId}</p>
+//           <p>Time: {e.time}</p>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+
+
+import { useEffect, useRef, useState } from "react";
+
+function Scanner() {
+  const videoRef = useRef(null);
   const [result, setResult] = useState("");
-  const [status, setStatus] = useState("");
-  const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    async function loadEvents() {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = getContract(provider);
+    async function startScanner() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" }
+        });
 
-      const filter = contract.filters.PassScanned();
-      const logs = await contract.queryFilter(filter);
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
 
-      const parsed = logs
-        .map((log) => {
-          return {
-            user: log.args.user,
-            tokenId: Number(log.args.tokenId),
-            time: new Date(Number(log.args.time) * 1000).toLocaleString(),
-          };
-        })
-        .reverse();
+        const detector = new window.BarcodeDetector({ formats: ["qr_code"] });
 
-      setEvents(parsed);
+        const scanLoop = async () => {
+          try {
+            const barcodes = await detector.detect(videoRef.current);
+            if (barcodes.length > 0) {
+              setResult(barcodes[0].rawValue);
+            }
+          } catch (err) {
+            console.error(err);
+          }
+          requestAnimationFrame(scanLoop);
+        };
+
+        scanLoop();
+      } catch (err) {
+        console.error("Camera error:", err);
+      }
     }
 
-    loadEvents();
+    startScanner();
   }, []);
-
-  async function handleScan(data) {
-    if (!data) return;
-    if (data === result) return;
-
-    setResult(data);
-
-    // QR format is: address:tokenId
-    const [user, tokenId] = data.split(":");
-    setStatus(`Scanned pass of user ${user}, token ${tokenId}`);
-
-    try {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = getContract(signer);
-
-      const tx = await contract.logScan(user, Number(tokenId));
-      await tx.wait();
-
-      setStatus("✔ Pass Verified & Logged Successfully");
-
-      // reload events after log
-      const filter = contract.filters.PassScanned();
-      const logs = await contract.queryFilter(filter);
-
-      const parsed = logs
-        .map((log) => ({
-          user: log.args.user,
-          tokenId: Number(log.args.tokenId),
-          time: new Date(Number(log.args.time) * 1000).toLocaleString(),
-        }))
-        .reverse();
-
-      setEvents(parsed);
-    } catch (e) {
-      setStatus("❌ Invalid Pass: " + e.reason);
-    }
-  }
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Scanner</h2>
+      <h2>QR Scanner</h2>
+      <video
+        ref={videoRef}
+        style={{ width: "100%", borderRadius: 8 }}
+      ></video>
 
-      <QrReader
-        onResult={(r) => handleScan(r?.text)}
-        constraints={{ facingMode: "environment" }}
-        style={{ width: "300px" }}
-      />
-
-      <p>{status}</p>
-
-      <h3>Scan History</h3>
-
-      {events.map((e, i) => (
-        <div key={i} style={{ border: "1px solid #444", padding: 10, marginBottom: 10 }}>
-          <p>User: {e.user}</p>
-          <p>Token: {e.tokenId}</p>
-          <p>Time: {e.time}</p>
+      {result && (
+        <div style={{ marginTop: 20 }}>
+          <h3>Scanned Result:</h3>
+          <p>{result}</p>
         </div>
-      ))}
+      )}
     </div>
   );
 }
+
+export default Scanner;
